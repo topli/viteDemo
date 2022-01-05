@@ -1,0 +1,42 @@
+{
+  "name": "vite-demo",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.178",
+    "@types/node": "^17.0.5",
+    "@types/nprogress": "^0.2.0",
+    "@types/qs": "^6.9.7",
+    "@vueuse/core": "^7.4.1",
+    "axios": "^0.24.0",
+    "lodash": "^4.17.21",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.0.0-rc.10",
+    "qs": "^6.10.2",
+    "vant": "^3.4.0",
+    "vue": "^3.2.16",
+    "vue-router": "^4.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "@vitejs/plugin-vue": "^1.9.3",
+    "@vue/compiler-sfc": "^3.0.4",
+    "autoprefixer": "^10.4.1",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.6.0",
+    "prettier": "^2.2.1",
+    "sass": "^1.45.1",
+    "typescript": "^4.4.3",
+    "unplugin-vue-components": "^0.17.11",
+    "vite": "^2.6.4",
+    "vue-tsc": "^0.3.0"
+  }
+}
