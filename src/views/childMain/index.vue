@@ -10,18 +10,19 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
+  import { getUserInfo } from '@/hooks/userHook'
+  import { watchTitle } from '@/hooks/routerHook'
   const router = useRouter()
-  const route = useRoute()
 
-  const title = ref(route.name)
+  const title = watchTitle()
+
   const back = () => {
     router.go(-1)
   }
 
-  watch(route, (to) => {
-    title.value = to.name as string
-  })
+  const userInfo = getUserInfo()
+
+  console.log(userInfo)
 </script>
 <style scoped lang="scss"></style>

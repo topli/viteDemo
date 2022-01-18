@@ -27,27 +27,14 @@
   import Search from '@/views/search/index.vue'
   import Account from '@/views/account/index.vue'
 
-  import { UserApi } from '@/api/userApi'
-  import { userStore } from '@/store/user'
   import { useRouter } from 'vue-router'
-  import { useLocalStorage } from '@vueuse/core'
+
   const router = useRouter()
 
   const currentTabComponent = ref('chat')
   const title = ref('聊天')
 
   let userInfoLoaded = ref(false)
-
-  UserApi.getUserInfo()
-    .then((res: any) => {
-      const userState = userStore()
-      userState.setUserInfo(res.data.data)
-      useLocalStorage('userInfo', res.data.data)
-      userInfoLoaded.value = true
-    })
-    .catch((err) => {
-      Toast('获取用户信息失败' + err.data.message)
-    })
 
   watch(currentTabComponent, (val) => {
     console.log(val)

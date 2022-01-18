@@ -1,4 +1,4 @@
-export interface Chat {
+export interface IChat {
   _id: string
   form: {
     id: string

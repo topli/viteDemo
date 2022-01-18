@@ -1,4 +1,4 @@
-export interface UserInfo {
+export interface IUser {
   _id: string
   objectId?: string
   id?: string

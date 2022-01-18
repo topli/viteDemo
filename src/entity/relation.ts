@@ -1,5 +1,7 @@
-export interface Chat {
+import { IUser } from './user'
+
+export interface IRelation {
   _id: string
-  self: string
-  linkId: string
+  linkToId: IUser
+  linkFromId: IUser
 }

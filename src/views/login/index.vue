@@ -36,6 +36,7 @@
   import { useLocalStorage } from '@vueuse/core'
   import { UserService } from './service'
   import { AxiosResponse } from 'axios'
+  import { setUserInfo } from '@/hooks/userHook'
 
   const VITE_MODE_NAME = import.meta.env.VITE_MODE_NAME
   // 路由
@@ -70,10 +71,11 @@
   const login = () => {
     if (loginInfo.u && loginInfo.p) {
       UserService.login(loginInfo).then((res: AxiosResponse) => {
-        const { data } = res
+        const { data } = res.data
         if (data.code === 200) {
           const token = useLocalStorage('token', '')
           token.value = data.token
+          setUserInfo(data.data)
           router.push('/')
         } else {
           Toast(data.message)

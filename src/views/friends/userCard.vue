@@ -31,14 +31,14 @@
 
   const { userInfo } = userStore()
 
-  let state = reactive<{ friendInfo: UserInfo }>({
+  let state = reactive<{ friendInfo: IUser }>({
     friendInfo: {
       _id: ''
     }
   })
 
   import { useRoute } from 'vue-router'
-  import { UserInfo } from '@/entity/user'
+  import { IUser } from '@/entity/user'
   import { Toast } from 'vant'
 
   const isFriend = ref(false)

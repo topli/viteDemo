@@ -28,12 +28,12 @@
   import _ from 'lodash'
   import { reactive, ref } from 'vue'
 
-  import { Chat } from '@/entity/chat'
+  import { IChat } from '@/entity/chat'
   import { ChatService } from './service'
 
   const loading = ref()
 
-  const chat = reactive<{ unread: number; list: Chat[] }>({
+  const chat = reactive<{ unread: number; list: IChat[] }>({
     unread: 0,
     list: []
   })
