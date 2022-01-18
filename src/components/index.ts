@@ -1,7 +1,7 @@
 // import Tabbar from './Tabbar.vue'
 
 export default {
-  install(vue) {
+  install() {
     // vue.use(Tabbar)
   }
 }

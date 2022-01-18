@@ -1,4 +1,5 @@
-import Axios, { HttpResponse } from '@/libs/http'
+import Axios from '@/libs/request'
+import { AxiosResponse } from 'axios'
 /**
  * @interface loginParams -登录参数
  * @property {string} username -用户名
@@ -15,14 +16,14 @@ export class UserService {
    * @param {number} teamId - 所要查询的团队ID
    * @return {HttpResponse} result
    */
-  static async login(data: LoginParams): Promise<HttpResponse> {
+  static async login(data: LoginParams): Promise<AxiosResponse> {
     return Axios('/api/user/login', {
       method: 'post',
       data
     })
   }
 
-  static async register(data: LoginParams): Promise<HttpResponse> {
+  static async register(data: LoginParams): Promise<AxiosResponse> {
     return Axios('/api/user/register', {
       method: 'post',
       data

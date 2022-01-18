@@ -7,9 +7,12 @@
     }
   }
 }
-.van-hairline--bottom::after {
-  // border-bottom-color: rgba(204, 204, 204, 0.5);
+::v-deep(.we-cell) {
+  .van-cell-group:not(:first-child) {
+    margin-top: 8px;
+  }
 }
+
 .nav-container {
   padding-top: var(--van-nav-bar-height);
   height: 100%;

@@ -1,12 +1,6 @@
 // http.ts
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import qs from 'qs'
-// 接口响应通过格式
-export interface HttpResponse {
-  code: number
-  message: string
-  [key: string]: any
-}
 
 const showStatus = (status: number) => {
   let message = ''
@@ -135,8 +129,20 @@ service.interceptors.request.use(
     addPending(config) // 将当前请求添加到 pending 中
     const token = localStorage.getItem('token')
     if (token) {
-      config.params.token = `${token}`
+      if (config.headers) {
+        config.headers.authorization = token
+      } else {
+        config.headers = {
+          authorization: token
+        }
+      }
+    }
+    if (config.params) {
       config.params.t = Date.now()
+    } else {
+      config.params = {
+        t: Date.now()
+      }
     }
     return config
   },
@@ -164,7 +170,7 @@ service.interceptors.response.use(
       }
     }
 
-    return response.data
+    return response
   },
   (error) => {
     if (axios.isCancel(error)) {

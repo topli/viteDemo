@@ -1,6 +1,6 @@
 <template>
   <div class="search-container h-100">
-    <div class="search-content">
+    <div class="search-container we-cell">
       <van-cell-group>
         <van-cell title="朋友圈" is-link icon="location-o" />
       </van-cell-group>
@@ -19,10 +19,4 @@
 </template>
 
 <script setup lang="ts"></script>
-<style scoped lang="scss">
-  .search-content {
-    .van-cell-group:not(:first-child) {
-      margin-top: 8px;
-    }
-  }
-</style>
+<style scoped lang="scss"></style>

@@ -1,35 +1,54 @@
 <template>
   <div class="chat-container h-100">
-    <div class="chat-list">
-      <div class="chat-wrap">
-        <div class="chat-img">
-          <van-badge :content="5">
-            <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          </van-badge>
-        </div>
-        <div class="chat-content">
-          <div class="chat-name">小猫</div>
-          <div class="chat-msg">今天中午吃什么</div>
-        </div>
-      </div>
-      <template v-for="i in 10" :key="i">
+    <div v-if="chat.list.length" class="chat-list">
+      <template v-for="session in chat.list" :key="session.id">
         <div class="chat-wrap">
           <div class="chat-img">
-            <van-badge :content="10">
+            <template v-if="session.unread">
+              <van-badge :content="session.unread">
+                <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+              </van-badge>
+            </template>
+            <template v-else>
               <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-            </van-badge>
+            </template>
           </div>
           <div class="chat-content">
-            <div class="chat-name">小狗</div>
-            <div class="chat-msg">今天晚上吃什么</div>
+            <div class="chat-name">{{ session.to?.displayName }}</div>
+            <div class="chat-msg">{{ session.newMsg }}</div>
           </div>
         </div>
       </template>
     </div>
+    <div v-if="loading" class="no-data"> 数据加载中。。。 </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import _ from 'lodash'
+  import { reactive, ref } from 'vue'
+
+  import { Chat } from '@/entity/chat'
+  import { ChatService } from './service'
+
+  const loading = ref()
+
+  const chat = reactive<{ unread: number; list: Chat[] }>({
+    unread: 0,
+    list: []
+  })
+  const getList = () => {
+    loading.value = true
+    ChatService.getList().then((res) => {
+      loading.value = false
+      const { data } = res.data
+      if (data && _.isArray(data)) {
+        chat.list = data
+      }
+    })
+  }
+  getList()
+</script>
 <style scoped lang="scss">
   .chat-container {
     display: flex;
@@ -45,7 +64,7 @@
         background-color: white;
       }
       .chat-img {
-        padding: 0.5rem 1rem;
+        padding: 0.2rem 0.8rem;
       }
       .chat-content {
         flex: 1;
@@ -63,5 +82,11 @@
         }
       }
     }
+  }
+  .no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 </style>

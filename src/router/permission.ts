@@ -2,18 +2,19 @@ import router from './index'
 import NProgress from 'nprogress'
 import { useTitle } from '@vueuse/core'
 
-import { clearPending } from '@/libs/http'
+import { clearPending } from '@/libs/request'
 import { useLocalStorage } from '@vueuse/core'
-
+NProgress.configure({ showSpinner: false })
 const title = useTitle()
+
 router.beforeEach((to, from, next) => {
   clearPending()
   NProgress.start()
   title.value = `vite - ${to.name?.toString()}`
-
   const token = useLocalStorage('token', '')
 
   if (token.value) {
+    // 一般获取用户权限，进行路由权限判断 然后跳转路由
     if (to.path === '/login') {
       next('/')
     } else {
@@ -27,7 +28,5 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
-  setTimeout(() => {
-    NProgress.done()
-  }, 1000)
+  NProgress.done()
 })

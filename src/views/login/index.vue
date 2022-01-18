@@ -30,12 +30,12 @@
 </template>
 
 <script setup lang="ts">
-  import { HttpResponse } from '@/libs/http'
   import { Toast } from 'vant'
   import { reactive, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useLocalStorage } from '@vueuse/core'
   import { UserService } from './service'
+  import { AxiosResponse } from 'axios'
 
   const VITE_MODE_NAME = import.meta.env.VITE_MODE_NAME
   // 路由
@@ -69,13 +69,14 @@
 
   const login = () => {
     if (loginInfo.u && loginInfo.p) {
-      UserService.login(loginInfo).then((res: HttpResponse) => {
-        if (res.code === 200) {
+      UserService.login(loginInfo).then((res: AxiosResponse) => {
+        const { data } = res
+        if (data.code === 200) {
           const token = useLocalStorage('token', '')
-          token.value = res.token
+          token.value = data.token
           router.push('/')
         } else {
-          Toast(res.message)
+          Toast(data.message)
         }
       })
     }
@@ -84,6 +85,7 @@
 <style scoped lang="scss">
   .login-wrap {
     padding: 10%;
+    text-align: center;
     .login-btns {
       background: transparent;
       background-image: linear-gradient(150deg, rgb(0 255 173 / 50%), #0089ff);
