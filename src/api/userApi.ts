@@ -1,3 +1,4 @@
+import { IUser } from '@/entity/user'
 import Axios from '@/libs/request'
 import { AxiosResponse } from 'axios'
 
@@ -49,6 +50,22 @@ export class UserApi {
       method: 'get',
       params: {
         id
+      }
+    })
+  }
+
+  /**
+   * 修改用户信息
+   * @param data 修改数据
+   * @returns
+   */
+  static async updateUser(id: string, key: string, value: string): Promise<AxiosResponse> {
+    return Axios('/api/user/update', {
+      method: 'put',
+      data: {
+        id,
+        key,
+        value
       }
     })
   }

@@ -8,18 +8,7 @@
       @cancel="onCancel"
     />
     <template v-for="user in searchIns.searchList" :key="user.id">
-      <div class="user-wrap" @click="goUserCard(user._id)">
-        <div class="user-avater">
-          <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-        </div>
-        <div class="user-content">
-          <div class="user-name">{{ user.nickName || user.account }}</div>
-          <div class="user-we-id">
-            <span>微信号：</span>
-            {{ user.weId }}
-          </div>
-        </div>
-      </div>
+      <UserCard :user="user" :type="UserCardType.account" @click="goUserCard(user._id)"></UserCard>
     </template>
   </div>
 </template>
@@ -29,6 +18,8 @@
   import { IUser } from '@/entity/user'
   import { reactive } from 'vue'
   import { useRouter } from 'vue-router'
+  import UserCard from '@/components/UserCard/index.vue'
+  import { UserCardType } from '@/emun/user'
 
   const router = useRouter()
 
@@ -52,8 +43,6 @@
   }
   // 用户卡
   const goUserCard = (id: string) => {
-    console.log(id)
-
     router.push({ path: '/friends/info', query: { id } })
   }
 </script>

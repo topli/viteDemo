@@ -1,0 +1,64 @@
+<template>
+  <van-cell class="user-card" :bind="attrs">
+    <template #icon>
+      <van-badge v-if="unread" :content="unread">
+        <van-image :width="image.w" :height="image.h" :src="props.user.avatar" />
+      </van-badge>
+      <van-image v-else :width="image.w" :height="image.h" :src="props.user.avatar"></van-image>
+    </template>
+    <template #title>
+      <div class="user-card-title">
+        {{ displayName }}
+      </div>
+    </template>
+    <template #label>
+      <div v-if="props.msg" class="user-card-label overflow-ellipsis">{{ props.msg }} </div>
+      <div v-else-if="type !== UserCardType.friend" class="user-card-label overflow-ellipsis">
+        微信号：{{ props.user.weId }}
+      </div>
+    </template>
+  </van-cell>
+</template>
+
+<script setup lang="ts">
+  import { UserCardType } from '@/emun/user'
+  import { IUser } from '@/entity/user'
+  import { computed, reactive, useAttrs } from 'vue'
+
+  interface UserCard {
+    user: IUser
+    type: UserCardType
+    unread?: number
+    msg?: string
+  }
+  const props = defineProps<UserCard>()
+
+  const attrs = useAttrs()
+
+  const image = reactive({ w: 46, h: 46 })
+  if (props.type === UserCardType.friend) {
+    image.w = 24
+    image.h = 24
+  }
+
+  const displayName = computed(() => {
+    const { nickName, phone, account } = props.user
+    return nickName || phone || account
+  })
+</script>
+<style scoped lang="scss">
+  .user-card {
+    align-items: center;
+    .user-card-title,
+    .user-card-label {
+      padding: 0 0.5rem;
+      font-size: var(--van-font-size-lg);
+    }
+    ::v-deep(.van-cell__title) {
+      overflow: hidden;
+    }
+    .user-card-label {
+      font-size: var(--van-font-size-md);
+    }
+  }
+</style>

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="userInfoLoaded" class="home-container" :class="showNav ? 'nav-container' : ''">
-    <van-nav-bar v-if="showNav" :title="title" border fixed>
+  <div class="home-container" :class="showNav ? 'nav-container' : ''">
+    <van-nav-bar v-if="showNav" :title="title" :border="true" fixed>
       <template #right>
         <van-icon name="search" size="18" @click="clickSearch" />
         <van-icon name="add-o" size="18" @click="clickAdd" />
@@ -22,24 +22,23 @@
 <script setup lang="ts">
   import { ref, watch, computed } from 'vue'
   import { Toast } from 'vant'
+  import { useRouter } from 'vue-router'
+  import { appStore } from '@/store/app'
   import Chat from '@/views/chat/index.vue'
   import Friends from '@/views/friends/index.vue'
   import Search from '@/views/search/index.vue'
   import Account from '@/views/account/index.vue'
 
-  import { useRouter } from 'vue-router'
-
   const router = useRouter()
 
-  const currentTabComponent = ref('chat')
+  const appState = appStore()
+
+  const currentTabComponent = ref(appState.currentTab || 'chat')
   const title = ref('聊天')
 
-  let userInfoLoaded = ref(false)
-
   watch(currentTabComponent, (val) => {
-    console.log(val)
     let t = ''
-    switch (currentTabComponent.value) {
+    switch (val) {
       case 'chat': {
         t = '聊天'
         break
@@ -52,11 +51,12 @@
         t = '发现'
         break
       }
-      case 'setting': {
+      case 'account': {
         t = '我的'
         break
       }
     }
+    appState.setCurrentTab(val)
     title.value = t
   })
 

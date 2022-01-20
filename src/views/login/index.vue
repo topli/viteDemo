@@ -71,7 +71,7 @@
   const login = () => {
     if (loginInfo.u && loginInfo.p) {
       UserService.login(loginInfo).then((res: AxiosResponse) => {
-        const { data } = res.data
+        const { data } = res
         if (data.code === 200) {
           const token = useLocalStorage('token', '')
           token.value = data.token

@@ -26,7 +26,26 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'info',
         name: ' ',
-        component: () => import(/* webpackChunkName: "addFriend" */ '@/views/friends/userCard.vue')
+        component: () => import(/* webpackChunkName: "userCard" */ '@/views/friends/userCard.vue')
+      }
+    ]
+  },
+  {
+    path: '/account',
+    name: '用户中心',
+    component: childMain,
+    children: [
+      {
+        path: 'information',
+        name: '个人信息',
+        component: () =>
+          import(/* webpackChunkName: "information" */ '@/views/account/information.vue')
+      },
+      {
+        path: 'updateField',
+        name: '修改信息',
+        component: () =>
+          import(/* webpackChunkName: "updateField" */ '@/views/account/updateField.vue')
       }
     ]
   }

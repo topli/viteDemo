@@ -1,19 +1,6 @@
 <template>
   <div>
-    <div class="user-wrap">
-      <div class="user-avatar">
-        <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-      </div>
-      <div class="user-info">
-        <div class="user-display-name">
-          {{ displayName }}
-        </div>
-        <div class="user-we-id">
-          <span>微信号：</span>
-          {{ state.friendInfo.weId }}
-        </div>
-      </div>
-    </div>
+    <UserCard :user="state.friendInfo" :type="UserCardType.account"></UserCard>
     <div class="action-btn">
       <van-button v-if="!isFriend" icon="plus" block type="default" @click="addFriend">
         添加好友
@@ -24,10 +11,12 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, reactive, ref } from 'vue'
+  import { reactive, ref } from 'vue'
   import { userStore } from '@/store/user'
+  import UserCard from '@/components/UserCard/index.vue'
   import { RelationService } from './service'
   import { UserApi } from '@/api/userApi'
+  import { UserCardType } from '@/emun/user'
 
   const { userInfo } = userStore()
 
@@ -60,13 +49,9 @@
 
   getRelation()
 
-  const displayName = computed(() => {
-    return state.friendInfo.nickName || state.friendInfo.phone || state.friendInfo.account
-  })
-
   const addFriend = () => {
-    if (userInfo.id && state.friendInfo.id) {
-      RelationService.save(userInfo.id, state.friendInfo.id).then((res) => {
+    if (userInfo && state.friendInfo.id) {
+      RelationService.save(userInfo._id, state.friendInfo.id).then((res) => {
         if (res.data.code !== 200) {
           Toast(res.data.message)
         } else {

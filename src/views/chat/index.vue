@@ -2,22 +2,12 @@
   <div class="chat-container h-100">
     <div v-if="chat.list.length" class="chat-list">
       <template v-for="session in chat.list" :key="session.id">
-        <div class="chat-wrap">
-          <div class="chat-img">
-            <template v-if="session.unread">
-              <van-badge :content="session.unread">
-                <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-              </van-badge>
-            </template>
-            <template v-else>
-              <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-            </template>
-          </div>
-          <div class="chat-content">
-            <div class="chat-name">{{ session.to?.displayName }}</div>
-            <div class="chat-msg">{{ session.newMsg }}</div>
-          </div>
-        </div>
+        <UserCard
+          :user="session.to"
+          :type="UserCardType.chat"
+          :unread="session.unread"
+          :msg="session.newMsg"
+        ></UserCard>
       </template>
     </div>
     <div v-if="loading" class="no-data"> 数据加载中。。。 </div>
@@ -27,9 +17,10 @@
 <script setup lang="ts">
   import _ from 'lodash'
   import { reactive, ref } from 'vue'
-
+  import UserCard from '@/components/UserCard/index.vue'
   import { IChat } from '@/entity/chat'
   import { ChatService } from './service'
+  import { UserCardType } from '@/emun/user'
 
   const loading = ref()
 

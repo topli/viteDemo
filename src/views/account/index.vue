@@ -1,17 +1,13 @@
 <template>
-  <div>
-    <div class="user-wrap">
-      <div class="user-avatar">
-        <van-image width="45" height="45" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-      </div>
-      <div class="user-info">
-        <div class="user-display-name">
-          {{ displayName }}
-        </div>
-        <div class="user-we-id">
-          {{ userInfo.weId }}
-        </div>
-      </div>
+  <div class="account-container">
+    <div class="account-user-card">
+      <UserCard
+        :user="userInfo"
+        :type="UserCardType.account"
+        is-link
+        :border="false"
+        @click="goInformation"
+      ></UserCard>
     </div>
     <div class="user-cell we-cell">
       <van-cell-group>
@@ -31,31 +27,23 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue'
-  import { userStore } from '@/store/user'
-  const { userInfo } = userStore()
+  import UserCard from '@/components/UserCard/index.vue'
+  import { UserCardType } from '@/emun/user'
+  import { getUserInfo } from '@/hooks/userHook'
+  import { useRouter } from 'vue-router'
 
-  const displayName = computed(() => {
-    return userInfo.nickName || userInfo.phone || userInfo.account
-  })
+  const { userInfo } = getUserInfo()
+  const router = useRouter()
+
+  const goInformation = () => {
+    router.push({ path: '/account/information', query: { id: userInfo._id } })
+  }
 </script>
 <style scoped lang="scss">
-  .user-wrap {
-    padding: 10% 5% 5% 5%;
-    display: flex;
-    align-items: center;
-    .user-info {
-      position: relative;
-      padding: 0 10px;
-      height: 100%;
-      .user-display-name {
-        font-size: 1rem;
-        font-weight: bold;
-        height: 50%;
-      }
-      .user-we-id {
-        height: 50%;
-      }
+  .account-container {
+    .account-user-card {
+      padding-top: 2rem;
+      background-color: white;
     }
   }
 </style>

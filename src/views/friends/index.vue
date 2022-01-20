@@ -4,8 +4,12 @@
       <van-index-bar :index-list="state.indexList">
         <template v-for="item in state.list" :key="item.key">
           <van-index-anchor :index="item.key" />
-          <template v-for="val in item.values" :key="val.id">
-            <van-cell :title="val.nickName || val.account" />
+          <template v-for="val in item.values" :key="val._id">
+            <van-cell :title="val.nickName" :url="`/friends/info?id=${val._id}`">
+              <template #icon>
+                <van-image :width="30" :height="30" :src="val.avatar" />
+              </template>
+            </van-cell>
           </template>
         </template>
       </van-index-bar>
@@ -31,5 +35,10 @@
   .friends-list {
     overflow-y: auto;
     height: 100%;
+    ::v-deep(.van-cell__title) {
+      padding-left: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
   }
 </style>

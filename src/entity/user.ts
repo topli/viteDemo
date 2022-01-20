@@ -8,4 +8,5 @@ export interface IUser {
   account?: string
   weId?: string
   pinyin?: string
+  avatar?: string
 }

@@ -1,15 +1,9 @@
+import { IUser } from './user'
+
 export interface IChat {
   _id: string
-  form: {
-    id: string
-    account: string
-    displayName: string
-  }
-  to: {
-    id: string
-    account: string
-    displayName: string
-  }
+  form: IUser
+  to: IUser
   unread: number
   show: boolean
   newMsg: string
