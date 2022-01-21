@@ -5,7 +5,7 @@
         <template v-for="item in state.list" :key="item.key">
           <van-index-anchor :index="item.key" />
           <template v-for="val in item.values" :key="val._id">
-            <van-cell :title="val.nickName" :url="`/friends/info?id=${val._id}`">
+            <van-cell :title="val.nickName" :to="`/friends/info?id=${val._id}`">
               <template #icon>
                 <van-image :width="30" :height="30" :src="val.avatar" />
               </template>

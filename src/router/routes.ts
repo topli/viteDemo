@@ -6,6 +6,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: '主页',
+    meta: {
+      keepAlive: true
+    },
     component: () => import(/* webpackChunkName: "home" */ '@/views/home/index.vue')
   },
   {
@@ -48,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
           import(/* webpackChunkName: "updateField" */ '@/views/account/updateField.vue')
       }
     ]
+  },
+  {
+    path: '/session',
+    name: '聊天',
+    component: () => import(/* webpackChunkName: "chat" */ '@/views/chat/session/index.vue')
   }
 ]
 export default routes

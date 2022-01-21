@@ -10,8 +10,3 @@ export const watchTitle = (): Ref<String> => {
   })
   return title
 }
-
-const routerHook = {
-  watchTitle
-}
-export default routerHook

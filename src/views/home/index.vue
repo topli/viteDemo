@@ -23,7 +23,6 @@
   import { ref, watch, computed } from 'vue'
   import { Toast } from 'vant'
   import { useRouter } from 'vue-router'
-  import { appStore } from '@/store/app'
   import Chat from '@/views/chat/index.vue'
   import Friends from '@/views/friends/index.vue'
   import Search from '@/views/search/index.vue'
@@ -31,9 +30,9 @@
 
   const router = useRouter()
 
-  const appState = appStore()
+  // const appState = appStore()
 
-  const currentTabComponent = ref(appState.currentTab || 'chat')
+  const currentTabComponent = ref('chat')
   const title = ref('聊天')
 
   watch(currentTabComponent, (val) => {
@@ -56,7 +55,7 @@
         break
       }
     }
-    appState.setCurrentTab(val)
+    // appState.setCurrentTab(val)
     title.value = t
   })
 

@@ -1,4 +1,3 @@
-import { IUser } from '@/entity/user'
 import Axios from '@/libs/request'
 import { AxiosResponse } from 'axios'
 

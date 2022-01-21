@@ -7,6 +7,7 @@
           :type="UserCardType.chat"
           :unread="session.unread"
           :msg="session.newMsg"
+          :to="`/session?id=${session.to._id}`"
         ></UserCard>
       </template>
     </div>

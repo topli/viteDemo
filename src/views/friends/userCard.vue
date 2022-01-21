@@ -13,7 +13,7 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import { userStore } from '@/store/user'
-  import UserCard from '@/components/UserCard/index.vue'
+  import UserCard from '@c/UserCard/index.vue'
   import { RelationService } from './service'
   import { UserApi } from '@/api/userApi'
   import { UserCardType } from '@/emun/user'
@@ -50,8 +50,8 @@
   getRelation()
 
   const addFriend = () => {
-    if (userInfo && state.friendInfo.id) {
-      RelationService.save(userInfo._id, state.friendInfo.id).then((res) => {
+    if (userInfo && state.friendInfo._id) {
+      RelationService.save(userInfo._id, state.friendInfo._id).then((res) => {
         if (res.data.code !== 200) {
           Toast(res.data.message)
         } else {
