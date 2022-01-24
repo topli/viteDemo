@@ -14,21 +14,21 @@
   import { reactive, ref } from 'vue'
   import { userStore } from '@/store/user'
   import UserCard from '@c/UserCard/index.vue'
-  import { RelationService } from './service'
+  import { Relation } from '@/model'
   import { UserApi } from '@/api/userApi'
   import { UserCardType } from '@/emun/user'
 
+  import { useRoute } from 'vue-router'
+  import { User } from '@/model'
+  import { Toast } from 'vant'
+
   const { userInfo } = userStore()
 
-  let state = reactive<{ friendInfo: IUser }>({
+  let state = reactive<{ friendInfo: User }>({
     friendInfo: {
       _id: ''
     }
   })
-
-  import { useRoute } from 'vue-router'
-  import { IUser } from '@/entity/user'
-  import { Toast } from 'vant'
 
   const isFriend = ref(false)
   const route = useRoute()
@@ -51,7 +51,7 @@
 
   const addFriend = () => {
     if (userInfo && state.friendInfo._id) {
-      RelationService.save(userInfo._id, state.friendInfo._id).then((res) => {
+      Relation.save({ userId: userInfo._id, friendId: state.friendInfo._id }).then((res) => {
         if (res.data.code !== 200) {
           Toast(res.data.message)
         } else {

@@ -18,17 +18,17 @@
 </template>
 
 <script setup lang="ts">
+  import { Relation } from '@/model/relation'
   import { reactive } from 'vue'
-  import { RelationService } from './service'
 
   const state = reactive<{ list: any[]; indexList: any[] }>({
     list: [],
     indexList: []
   })
 
-  RelationService.getList().then((res) => {
-    state.list = res.data.data
-    state.indexList = res.data.data.map((item: any) => item.key)
+  Relation.getAll().then(({ data }) => {
+    state.list = data
+    state.indexList = data.map((item: any) => item.key)
   })
 </script>
 <style scoped lang="scss">

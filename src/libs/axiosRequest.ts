@@ -43,7 +43,7 @@ const showStatus = (status: number) => {
   }
   return `${message}，请检查网络或联系管理员！`
 }
-const service = axios.create({
+const AxiosRequest = axios.create({
   // 联调
   // baseURL: process.env.NODE_ENV === 'production' ? `/` : '/api',
   // 是否跨站点访问控制请求
@@ -123,7 +123,7 @@ export const clearPending = () => {
 }
 
 // 请求拦截器
-service.interceptors.request.use(
+AxiosRequest.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     removePending(config) // 在请求开始前，对之前的请求做检查取消操作
     addPending(config) // 将当前请求添加到 pending 中
@@ -155,7 +155,7 @@ service.interceptors.request.use(
 )
 
 // 响应拦截器
-service.interceptors.response.use(
+AxiosRequest.interceptors.response.use(
   (response: AxiosResponse) => {
     removePending(response) // 在请求结束后，移除本次请求
     const status = response.status
@@ -170,7 +170,7 @@ service.interceptors.response.use(
       }
     }
 
-    return response
+    return response.data
   },
   (error) => {
     if (axios.isCancel(error)) {
@@ -186,4 +186,4 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+export default AxiosRequest

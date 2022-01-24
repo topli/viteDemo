@@ -7,7 +7,7 @@
           :type="UserCardType.chat"
           :unread="session.unread"
           :msg="session.newMsg"
-          :to="`/session?id=${session.to._id}`"
+          :to="`/session?id=${session.to?._id}`"
         ></UserCard>
       </template>
     </div>
@@ -19,21 +19,21 @@
   import _ from 'lodash'
   import { reactive, ref } from 'vue'
   import UserCard from '@/components/UserCard/index.vue'
-  import { IChat } from '@/entity/chat'
-  import { ChatService } from './service'
+  import { Chat } from '@/model'
+  // import { ChatService } from './service'
   import { UserCardType } from '@/emun/user'
 
   const loading = ref()
 
-  const chat = reactive<{ unread: number; list: IChat[] }>({
+  const chat = reactive<{ unread: number; list: Chat[] }>({
     unread: 0,
     list: []
   })
   const getList = () => {
     loading.value = true
-    ChatService.getList().then((res) => {
+    Chat.getList().then((res) => {
       loading.value = false
-      const { data } = res.data
+      const { data } = res
       if (data && _.isArray(data)) {
         chat.list = data
       }

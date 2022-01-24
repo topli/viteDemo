@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
   import { UserApi } from '@/api/userApi'
-  import { IUser } from '@/entity/user'
+  import { User } from '@/model'
   import { reactive } from 'vue'
   import { useRouter } from 'vue-router'
   import UserCard from '@/components/UserCard/index.vue'
@@ -23,7 +23,7 @@
 
   const router = useRouter()
 
-  const searchIns = reactive<{ searchText: string; searchList: IUser[] }>({
+  const searchIns = reactive<{ searchText: string; searchList: User[] }>({
     searchText: '',
     searchList: []
   })

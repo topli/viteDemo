@@ -22,11 +22,11 @@
 
 <script setup lang="ts">
   import { UserCardType } from '@/emun/user'
-  import { IUser } from '@/entity/user'
+  import { User } from '@/model/user'
   import { computed, reactive, useAttrs } from 'vue'
 
   interface UserCard {
-    user: IUser
+    user: User
     type: UserCardType
     unread?: number
     msg?: string

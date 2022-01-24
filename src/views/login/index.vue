@@ -34,10 +34,9 @@
   import { reactive, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useLocalStorage } from '@vueuse/core'
-  import { UserService } from './service'
-  import { AxiosResponse } from 'axios'
   import { setUserInfo } from '@/hooks/userHook'
-
+  import { User } from '@/model'
+  // 环境变量用法
   const VITE_MODE_NAME = import.meta.env.VITE_MODE_NAME
   // 路由
   const router = useRouter()
@@ -70,15 +69,15 @@
 
   const login = () => {
     if (loginInfo.u && loginInfo.p) {
-      UserService.login(loginInfo).then((res: AxiosResponse) => {
-        const { data } = res
-        if (data.code === 200) {
-          const token = useLocalStorage('token', '')
-          token.value = data.token
-          setUserInfo(data.data)
+      User.login(loginInfo).then((res) => {
+        const { code, data, token, message } = res
+        if (code === 200) {
+          const localToken = useLocalStorage('token', '')
+          localToken.value = token
+          setUserInfo(data)
           router.push('/')
         } else {
-          Toast(data.message)
+          Toast(message)
         }
       })
     }
@@ -86,6 +85,8 @@
 </script>
 <style scoped lang="scss">
   .login-wrap {
+    max-width: 750px;
+    margin: 0 auto;
     padding: 10%;
     text-align: center;
     .login-btns {

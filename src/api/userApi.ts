@@ -1,4 +1,4 @@
-import Axios from '@/libs/request'
+import AxiosRequest from '@/libs/axiosRequest'
 import { AxiosResponse } from 'axios'
 
 //封装User类型的接口方法
@@ -9,7 +9,7 @@ export class UserApi {
    * @return {HttpResponse} result
    */
   static async getUserInfo(): Promise<AxiosResponse> {
-    return Axios('/api/user/info', {
+    return AxiosRequest('/api/user/info', {
       method: 'get'
     })
   }
@@ -19,7 +19,7 @@ export class UserApi {
    * @return {HttpResponse} result
    */
   static async getUserByText(text: String): Promise<AxiosResponse> {
-    return Axios('/api/user/search', {
+    return AxiosRequest('/api/user/search', {
       method: 'get',
       params: {
         text
@@ -32,7 +32,7 @@ export class UserApi {
    * @return {HttpResponse} result
    */
   static async getInfoById(id: string): Promise<AxiosResponse> {
-    return Axios('/api/user/infoById', {
+    return AxiosRequest('/api/user/infoById', {
       method: 'get',
       params: {
         id
@@ -45,7 +45,7 @@ export class UserApi {
    * @return {HttpResponse} result
    */
   static async getRelation(id: string): Promise<AxiosResponse> {
-    return Axios('/api/relation/search', {
+    return AxiosRequest('/api/relation/search', {
       method: 'get',
       params: {
         id
@@ -59,7 +59,7 @@ export class UserApi {
    * @returns
    */
   static async updateUser(id: string, key: string, value: string): Promise<AxiosResponse> {
-    return Axios('/api/user/update', {
+    return AxiosRequest('/api/user/update', {
       method: 'put',
       data: {
         id,
