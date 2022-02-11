@@ -1,13 +1,14 @@
 <template>
   <div class="chat-container h-100">
-    <div v-if="chat.list.length" class="chat-list">
-      <template v-for="session in chat.list" :key="session.id">
+    <div v-if="chatState.sessionArr.length" class="chat-list">
+      <template v-for="session in chatState.sessionArr" :key="session.id">
         <UserCard
-          :user="session.to"
+          :user="(session.to as User)"
           :type="UserCardType.chat"
           :unread="session.unread"
           :msg="session.newMsg"
-          :to="`/session?id=${session.to?._id}`"
+          :time="session.newTime"
+          @click="goSession(session)"
         ></UserCard>
       </template>
     </div>
@@ -17,29 +18,58 @@
 
 <script setup lang="ts">
   import _ from 'lodash'
-  import { reactive, ref } from 'vue'
+  import { ref } from 'vue'
   import UserCard from '@/components/UserCard/index.vue'
-  import { Chat } from '@/model'
-  // import { ChatService } from './service'
+  import { Chat, User } from '@/model'
+  import { chatStore } from '@/store/chat'
   import { UserCardType } from '@/emun/user'
+  import { useRouter } from 'vue-router'
+  import { userStore } from '@/store/user'
+  import { sub } from '@/libs/mqtt'
 
+  const router = useRouter()
+  const userState = userStore()
   const loading = ref()
+  const chatState = chatStore()
 
-  const chat = reactive<{ unread: number; list: Chat[] }>({
-    unread: 0,
-    list: []
-  })
   const getList = () => {
     loading.value = true
     Chat.getList().then((res) => {
       loading.value = false
       const { data } = res
       if (data && _.isArray(data)) {
-        chat.list = data
+        _.map(data, (item) => {
+          if (item.members) {
+            item.members.forEach((m: User) => {
+              if (m._id === userState.userInfo._id) {
+                item.from = m
+              } else {
+                item.to = m
+              }
+            })
+          }
+        })
+        chatState.setSessionList(data)
       }
     })
   }
   getList()
+
+  const goSession = (session: Chat) => {
+    chatState.setSession(session)
+    router.push('/session')
+  }
+  sub('session', (res: any) => {
+    const r = JSON.parse(res)
+    r.data.members.forEach((m: User) => {
+      if (m._id === userState.userInfo._id) {
+        r.data.from = m
+      } else {
+        r.data.to = m
+      }
+    })
+    chatState.pushSessionList(r.data)
+  })
 </script>
 <style scoped lang="scss">
   .chat-container {

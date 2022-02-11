@@ -1,11 +1,11 @@
 <template>
   <div class="session-container">
-    <van-nav-bar left-arrow :title="state.user?.nickName" @click-left="router.go(-1)" />
-    <div class="messages-wrap">
-      <template v-for="msg in state.messages" :key="msg.id">
-        <div class="p-10 flex" :class="{ 'me-msg': msg.form?._id === user.userInfo?._id }">
+    <van-nav-bar left-arrow :title="chatState.session.to?.nickName" @click-left="router.go(-1)" />
+    <div ref="messagesWrap" class="messages-wrap">
+      <template v-for="msg in chatState.messages" :key="msg.id">
+        <div class="p-10 flex" :class="{ 'me-msg': isMe(msg.from._id) }">
           <div class="avatar flex flex-align-center">
-            <van-image :src="state.user?.avatar" width="35" height="35"></van-image>
+            <van-image :src="msg.from?.avatar" width="35" height="35"></van-image>
           </div>
           <Message :msg="msg"></Message>
         </div>
@@ -13,38 +13,76 @@
     </div>
     <div class="footer-wrap">
       <input v-model="inputText" />
-      <van-button type="success">发送</van-button>
+      <van-button type="success" @click="sendMessage">发送</van-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import Message from '../message/index.vue'
-  import { UserApi } from '@/api/userApi'
-  import { IUser } from '@/entity/user'
-  import { reactive, ref } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-  import { getUserInfo } from '@/hooks/userHook'
-
-  const user = getUserInfo()
-  console.log(user)
+  import { Chat, Messages } from '@/model'
+  import { nextTick, ref } from 'vue'
+  import { chatStore } from '@/store/chat'
+  import { useRouter } from 'vue-router'
+  import { isMe } from '@/hooks/user'
+  import { sub } from '@/libs/mqtt'
 
   const router = useRouter()
-
-  const route = useRoute()
-
-  const query = route.query
-
-  const state = reactive<{ user?: IUser; messages?: any[] }>({})
-
-  UserApi.getInfoById(query.id as string).then((res) => {
-    console.log(res)
-    state.user = res.data.data
-  })
-
+  const chatState = chatStore()
+  const messagesWrap = ref()
   const inputText = ref('')
 
-  state.messages = [{ type: 'text', text: '今天晚上吃什么' }]
+  const getList = () => {
+    // 获取消息列表
+    Messages.getList(chatState.session._id).then((res) => {
+      chatState.setMessages(res.data)
+      // 消息最底部显示
+      nextTick(() => {
+        toBottom()
+      })
+    })
+  }
+  getList()
+  const sendMessage = () => {
+    console.log(chatState.session)
+
+    const data = {
+      sessionId: chatState.session._id,
+      content: inputText.value,
+      from: chatState.session.from._id,
+      type: 'text',
+      time: Date.now(),
+      mark: ''
+    }
+
+    // 发送消息
+    Messages.sendMessage(data).then((res) => {
+      console.log(res)
+      inputText.value = ''
+    })
+  }
+
+  const toBottom = () => {
+    const el = messagesWrap.value
+    el.scrollTop = el.scrollHeight - el.clientHeight
+  }
+  const mqCb = function (res: any) {
+    chatState.pushMessage(res.data)
+    console.log(res)
+
+    // 更新一下当前会话的最新消息
+    chatState.sessionList.map((item: Chat) => {
+      if (item._id === res.data.sessionId) {
+        item.newMsg = res.data.content
+        item.newTime = res.data.time
+        item.unread = item.unread + 1
+      }
+    })
+    setTimeout(() => {
+      toBottom()
+    }, 50)
+  }
+  sub('message', mqCb)
 </script>
 <style scoped lang="scss">
   .session-container {

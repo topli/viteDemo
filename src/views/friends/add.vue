@@ -1,20 +1,19 @@
 <template>
   <div class="add-friends-container">
     <van-search
-      v-model="searchIns.searchText"
+      v-model="state.searchText"
       show-action
       placeholder="微信号/手机号"
       @search="onSearch"
       @cancel="onCancel"
     />
-    <template v-for="user in searchIns.searchList" :key="user.id">
+    <template v-for="user in state.searchList" :key="user.id">
       <UserCard :user="user" :type="UserCardType.account" @click="goUserCard(user._id)"></UserCard>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { UserApi } from '@/api/userApi'
   import { User } from '@/model'
   import { reactive } from 'vue'
   import { useRouter } from 'vue-router'
@@ -23,23 +22,23 @@
 
   const router = useRouter()
 
-  const searchIns = reactive<{ searchText: string; searchList: User[] }>({
+  const state = reactive<{ searchText: string; searchList: User[] }>({
     searchText: '',
     searchList: []
   })
 
   // 搜索朋友
   const onSearch = () => {
-    UserApi.getUserByText(searchIns.searchText).then((res) => {
-      if (res.data.code === 200) {
-        searchIns.searchList = res.data.data || []
+    User.serachByText(state.searchText).then((res) => {
+      if (res.code === 200) {
+        state.searchList = res.data || []
       }
     })
   }
   // 清空搜索文本、搜索用户
   const onCancel = () => {
-    searchIns.searchText = ''
-    searchIns.searchList = []
+    state.searchText = ''
+    state.searchList = []
   }
   // 用户卡
   const goUserCard = (id: string) => {

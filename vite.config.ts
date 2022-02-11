@@ -41,6 +41,7 @@ export default defineConfig({
     // 代理配置
     proxy: {
       '/api': 'http://localhost:8081'
+      // '/mqtt': 'ws://localhost:1883'
     }
   },
   build: {

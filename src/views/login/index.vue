@@ -34,7 +34,7 @@
   import { reactive, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useLocalStorage } from '@vueuse/core'
-  import { setUserInfo } from '@/hooks/userHook'
+  import { setUserInfo } from '@/hooks/user'
   import { User } from '@/model'
   // 环境变量用法
   const VITE_MODE_NAME = import.meta.env.VITE_MODE_NAME

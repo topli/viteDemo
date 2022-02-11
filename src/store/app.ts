@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 // 全局状态管理
-export const appStore = defineStore('appState', {
+export const appStore = defineStore('appStore', {
   // state: 返回对象的函数
   state: () => ({
     navTitle: '',

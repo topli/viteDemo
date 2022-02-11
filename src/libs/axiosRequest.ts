@@ -1,4 +1,5 @@
 // http.ts
+import { useLocalStorage } from '@vueuse/core'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import qs from 'qs'
 
@@ -167,6 +168,15 @@ AxiosRequest.interceptors.response.use(
         response.data = { msg }
       } else {
         response.data.msg = msg
+      }
+
+      // 没有权限
+      if (status === 401) {
+        const localToken = useLocalStorage('token', '')
+        localToken.value = ''
+        const userInfo = useLocalStorage('userInfo', '')
+        userInfo.value = ''
+        window.location.href = '/login'
       }
     }
 

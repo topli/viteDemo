@@ -3,7 +3,7 @@ import { User } from '@/model'
 import { useLocalStorage } from '@vueuse/core'
 
 // defineStore 调用后返回一个函数，调用该函数获得 Store 实体
-export const userStore = defineStore('userState', {
+export const userStore = defineStore('userStore', {
   // state: 返回对象的函数
   state: () => ({
     user: null as User | null
@@ -17,7 +17,8 @@ export const userStore = defineStore('userState', {
     },
     getUserInfo() {
       User.getUserInfo().then((res) => {
-        this.user = res.data || null
+        this.user = res.data ?? null
+        console.log(this.user)
       })
     }
   }

@@ -29,10 +29,10 @@
 <script setup lang="ts">
   import UserCard from '@/components/UserCard/index.vue'
   import { UserCardType } from '@/emun/user'
-  import { getUserInfo } from '@/hooks/userHook'
+  import { getUserInfo } from '@/hooks/user'
   import { useRouter } from 'vue-router'
 
-  const { userInfo } = getUserInfo()
+  const userInfo = getUserInfo()
   const router = useRouter()
 
   const goInformation = () => {

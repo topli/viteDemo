@@ -5,7 +5,7 @@
       <van-button v-if="!isFriend" icon="plus" block type="default" @click="addFriend">
         添加好友
       </van-button>
-      <van-button v-else icon="chat-o" block type="default">发消息</van-button>
+      <van-button v-else icon="chat-o" block type="default" @click="goSession">发消息</van-button>
     </div>
   </div>
 </template>
@@ -14,16 +14,15 @@
   import { reactive, ref } from 'vue'
   import { userStore } from '@/store/user'
   import UserCard from '@c/UserCard/index.vue'
-  import { Relation } from '@/model'
-  import { UserApi } from '@/api/userApi'
+  import { Relation, User, Chat } from '@/model'
   import { UserCardType } from '@/emun/user'
+  import { chatStore } from '@/store/chat'
 
-  import { useRoute } from 'vue-router'
-  import { User } from '@/model'
+  import { useRoute, useRouter } from 'vue-router'
   import { Toast } from 'vant'
-
-  const { userInfo } = userStore()
-
+  const router = useRouter()
+  const userState = userStore()
+  const chatState = chatStore()
   let state = reactive<{ friendInfo: User }>({
     friendInfo: {
       _id: ''
@@ -32,33 +31,54 @@
 
   const isFriend = ref(false)
   const route = useRoute()
-  const id = route.query.id || ''
+  const id = route.query.id ?? ''
   const getFriendInfo = () => {
-    UserApi.getInfoById(id as string).then((res: any) => {
-      state.friendInfo = res.data.data
+    User.getById(id as string).then((res: any) => {
+      state.friendInfo = res.data
     })
   }
 
   getFriendInfo()
 
   const getRelation = () => {
-    UserApi.getRelation(id as string).then((res: any) => {
-      isFriend.value = res.data.data
+    Relation.search(id as string).then((res: any) => {
+      isFriend.value = res.data
     })
   }
 
   getRelation()
 
   const addFriend = () => {
-    if (userInfo && state.friendInfo._id) {
-      Relation.save({ userId: userInfo._id, friendId: state.friendInfo._id }).then((res) => {
-        if (res.data.code !== 200) {
-          Toast(res.data.message)
-        } else {
-          isFriend.value = true
+    if (userState.userInfo && state.friendInfo._id) {
+      Relation.save({ userId: userState.userInfo._id, friendId: state.friendInfo._id }).then(
+        (res) => {
+          if (res.code !== 200) {
+            Toast(res.message)
+          } else {
+            isFriend.value = true
+          }
         }
-      })
+      )
     }
+  }
+
+  const goSession = () => {
+    Chat.generate({ members: [userState.userInfo._id, state.friendInfo._id] } as Chat).then(
+      (res) => {
+        const session = res.data
+        session.members = session.members.map((m: any) => {
+          if (m._id === userState.userInfo._id) {
+            session.from = m
+          } else {
+            session.to = m
+          }
+          return m
+        })
+
+        chatState.setSession(session)
+        router.push('/session')
+      }
+    )
   }
 </script>
 <style scoped lang="scss">

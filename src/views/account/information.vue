@@ -20,17 +20,17 @@
 
 <script setup lang="ts">
   import { UserApi } from '@/api/userApi'
-  import { IUser } from '@/entity/user'
+  import { User } from '@/model/user'
   import { reactive } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   const route = useRoute()
   const router = useRouter()
 
-  const state = reactive<{ userInfo: IUser }>({ userInfo: {} as IUser })
+  const state = reactive<{ userInfo: User }>({ userInfo: {} as User })
 
   const getUserInfo = () => {
     UserApi.getInfoById(route.query.id as string).then((res: any) => {
-      state.userInfo = res.data.data
+      state.userInfo = res.data
     })
   }
   getUserInfo()

@@ -11,8 +11,8 @@ export class User {
   pinyin?: string
   avatar?: string
 
-  static getById(_id: string) {
-    return AR.get<User>('/api/user/getById', { params: { _id } })
+  static getById(id: string) {
+    return AR.get<User>('/api/user/infoById', { params: { id } })
   }
 
   static getList(params: object, pages: PageOpts) {
@@ -26,7 +26,16 @@ export class User {
   static login(data: any) {
     return AR.post<User>('/api/user/login', data)
   }
+
   static getUserInfo() {
     return AR.get<User>('/api/user/getUserInfo')
+  }
+
+  static serachByText(text: string) {
+    return AR.get<User[]>('/api/user/search', {
+      params: {
+        text
+      }
+    })
   }
 }

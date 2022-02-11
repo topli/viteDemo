@@ -2,9 +2,9 @@
   <van-cell class="user-card" :bind="attrs">
     <template #icon>
       <van-badge v-if="unread" :content="unread">
-        <van-image :width="image.w" :height="image.h" :src="props.user.avatar" />
+        <van-image :width="image.w" :height="image.h" :src="props.user?.avatar" />
       </van-badge>
-      <van-image v-else :width="image.w" :height="image.h" :src="props.user.avatar"></van-image>
+      <van-image v-else :width="image.w" :height="image.h" :src="props.user?.avatar"></van-image>
     </template>
     <template #title>
       <div class="user-card-title">
@@ -13,14 +13,24 @@
     </template>
     <template #label>
       <div v-if="props.msg" class="user-card-label overflow-ellipsis">{{ props.msg }} </div>
-      <div v-else-if="type !== UserCardType.friend" class="user-card-label overflow-ellipsis">
+      <div v-else-if="type === UserCardType.friend" class="user-card-label overflow-ellipsis">
         微信号：{{ props.user.weId }}
+      </div>
+    </template>
+    <template v-if="props.msg" #value>
+      <div class="user-card-right">
+        <div class="time">
+          {{ formatTime(time) }}
+        </div>
       </div>
     </template>
   </van-cell>
 </template>
 
 <script setup lang="ts">
+  import dayjs from 'dayjs'
+  import isToday from 'dayjs/plugin/isToday'
+  import isYesterday from 'dayjs/plugin/isYesterday'
   import { UserCardType } from '@/emun/user'
   import { User } from '@/model/user'
   import { computed, reactive, useAttrs } from 'vue'
@@ -30,6 +40,7 @@
     type: UserCardType
     unread?: number
     msg?: string
+    time?: number
   }
   const props = defineProps<UserCard>()
 
@@ -44,6 +55,23 @@
   const displayName = computed(() => {
     const { nickName, phone, account } = props.user
     return nickName || phone || account
+  })
+
+  const formatTime = computed(() => {
+    return function (time: number | undefined) {
+      dayjs.extend(isToday)
+      dayjs.extend(isYesterday)
+      console.log(time)
+
+      let format = dayjs(time)
+      if (format.isToday()) {
+        return format.format('HH:ss')
+      } else if (format.isYesterday()) {
+        return '昨天'
+      } else {
+        return format.format('MM-DD')
+      }
+    }
   })
 </script>
 <style scoped lang="scss">

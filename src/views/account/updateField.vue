@@ -7,7 +7,7 @@
   import { ref } from 'vue'
   import { useRoute } from 'vue-router'
   import { UserApi } from '@/api/userApi'
-  import { setUserInfo } from '@/hooks/userHook'
+  import { setUserInfo } from '@/hooks/user'
   import { Toast } from 'vant'
 
   const route = useRoute()
@@ -30,7 +30,7 @@
 
   const update = () => {
     UserApi.updateUser(id as string, key as string, value.value).then((res) => {
-      const { code, data } = res.data
+      const { code, data } = res
       if (code === 200) {
         Toast('修改成功')
         setUserInfo(data)

@@ -11,4 +11,7 @@ export class Relation {
   static save(data: { userId: string; friendId: string }) {
     return AR.post('/api/relation/save', data)
   }
+  static search(id: string) {
+    return AR.get('/api/relation/search', { params: { id } })
+  }
 }

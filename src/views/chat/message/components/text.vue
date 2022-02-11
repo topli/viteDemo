@@ -1,14 +1,13 @@
 <template>
   <div class="message-item message-text">
     <div class="message-content">
-      {{ props.msg.text }}
+      {{ props.msg.content }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  const props = defineProps<{ msg: { text: string } }>()
-  console.log(props.msg)
+  const props = defineProps<{ msg: { content: string } }>()
 </script>
 <style scoped lang="scss">
   .message-text {

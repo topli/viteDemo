@@ -7,10 +7,7 @@
   import MessageText from './components/text.vue'
   const componentType = ref('MessageText')
 
-  const props = defineProps<{ msg: { text: string; type: string } }>()
-  console.log(props.msg)
-
-  // const props = defineProps<{ type: string }>()
+  const props = defineProps<{ msg: { content: string; type: string } }>()
 
   enum messageType {
     text = 'text'
