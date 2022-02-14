@@ -1,6 +1,10 @@
 <template>
   <div class="session-container">
-    <van-nav-bar left-arrow :title="chatState.session.to?.nickName" @click-left="router.go(-1)" />
+    <van-nav-bar
+      left-arrow
+      :title="chatState.session.to?.nickName || chatState.session.to?.phone"
+      @click-left="router.go(-1)"
+    />
     <div ref="messagesWrap" class="messages-wrap">
       <template v-for="msg in chatState.messages" :key="msg.id">
         <div class="p-10 flex" :class="{ 'me-msg': isMe(msg.from._id) }">
@@ -20,17 +24,17 @@
 
 <script setup lang="ts">
   import Message from '../message/index.vue'
-  import { Chat, Messages } from '@/model'
-  import { nextTick, ref } from 'vue'
+  import { Messages } from '@/model'
+  import { nextTick, ref, watch } from 'vue'
   import { chatStore } from '@/store/chat'
   import { useRouter } from 'vue-router'
   import { isMe } from '@/hooks/user'
-  import { sub } from '@/libs/mqtt'
 
   const router = useRouter()
   const chatState = chatStore()
   const messagesWrap = ref()
   const inputText = ref('')
+  console.log(chatState.session)
 
   const getList = () => {
     // 获取消息列表
@@ -44,8 +48,6 @@
   }
   getList()
   const sendMessage = () => {
-    console.log(chatState.session)
-
     const data = {
       sessionId: chatState.session._id,
       content: inputText.value,
@@ -62,27 +64,22 @@
     })
   }
 
+  watch(
+    () => chatState.messages,
+    () => {
+      console.log(123)
+      // 消息最底部显示
+      nextTick(() => {
+        toBottom()
+      })
+    },
+    { deep: true }
+  )
+
   const toBottom = () => {
     const el = messagesWrap.value
-    el.scrollTop = el.scrollHeight - el.clientHeight
+    if (el) el.scrollTop = el.scrollHeight - el.clientHeight
   }
-  const mqCb = function (res: any) {
-    chatState.pushMessage(res.data)
-    console.log(res)
-
-    // 更新一下当前会话的最新消息
-    chatState.sessionList.map((item: Chat) => {
-      if (item._id === res.data.sessionId) {
-        item.newMsg = res.data.content
-        item.newTime = res.data.time
-        item.unread = item.unread + 1
-      }
-    })
-    setTimeout(() => {
-      toBottom()
-    }, 50)
-  }
-  sub('message', mqCb)
 </script>
 <style scoped lang="scss">
   .session-container {

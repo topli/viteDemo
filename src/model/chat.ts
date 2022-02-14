@@ -1,14 +1,16 @@
 import AR from '@/libs/axiosRequest'
+import { Messages } from './messages'
 import { User } from './user'
 
 export class Chat {
   _id!: string
-  members?: Array<User | string>
+  members?: Array<User>
   type?: 'session' | 'group' | 'robot'
   from?: User
   to?: User
   unread = 0
   show?: boolean
+  messages!: Array<Messages>
   newMsg?: string
   newTime?: number
 

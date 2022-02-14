@@ -13,7 +13,7 @@
     </template>
     <template #label>
       <div v-if="props.msg" class="user-card-label overflow-ellipsis">{{ props.msg }} </div>
-      <div v-else-if="type === UserCardType.friend" class="user-card-label overflow-ellipsis">
+      <div v-else-if="type === UserCardType.account" class="user-card-label overflow-ellipsis">
         微信号：{{ props.user.weId }}
       </div>
     </template>
@@ -34,6 +34,7 @@
   import { UserCardType } from '@/emun/user'
   import { User } from '@/model/user'
   import { computed, reactive, useAttrs } from 'vue'
+  import { Messages } from '@/model'
 
   interface UserCard {
     user: User
@@ -41,6 +42,7 @@
     unread?: number
     msg?: string
     time?: number
+    messages?: Array<Messages>
   }
   const props = defineProps<UserCard>()
 
@@ -54,6 +56,8 @@
 
   const displayName = computed(() => {
     const { nickName, phone, account } = props.user
+    console.log(props.user)
+
     return nickName || phone || account
   })
 
@@ -61,11 +65,10 @@
     return function (time: number | undefined) {
       dayjs.extend(isToday)
       dayjs.extend(isYesterday)
-      console.log(time)
 
-      let format = dayjs(time)
+      let format = dayjs(new Date(Number(time)))
       if (format.isToday()) {
-        return format.format('HH:ss')
+        return format.format('HH:mm')
       } else if (format.isYesterday()) {
         return '昨天'
       } else {

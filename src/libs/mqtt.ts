@@ -5,7 +5,7 @@ const options = {
   //mqtt客户端的id，这里面应该还可以加上其他参数，具体看官方文档
   clientId: 'mqttjs_' + (Math.random() * 1000000).toString()
 }
-const subMap = new Map()
+let subscribe: Function
 
 export let client: any
 
@@ -36,14 +36,12 @@ export const createMQTT = (opt = <{ topic: string }>{}) => {
   })
 
   //如果client订阅主题成功，那么这里就是当接收到自己订阅主题的处理逻辑
-  client.on('message', function (topic: any, message: { toString: () => string }, packet: any) {
+  client.on('message', function (topic: any, message: { toString: () => string }) {
     // message is Buffer,此处就是打印消息的具体内容
     const data = JSON.parse(message.toString())
-    const cbArr = subMap.get(data.type) || []
-    for (let i = 0; i < cbArr.length; i++) {
-      const cb = cbArr[i]
-      cb(message.toString(), packet)
-    }
+    console.log(data)
+
+    subscribe && subscribe(data)
   })
 
   //当重新连接启动触发回调
@@ -74,14 +72,8 @@ export const createMQTT = (opt = <{ topic: string }>{}) => {
 
 //console.log(options.clientId);
 
-export const sub = (topic: string, cb: Function) => {
-  const cbArr = subMap.get(topic)
-  if (cbArr) {
-    cbArr.push(cb)
-    subMap.set(topic, cbArr)
-  } else {
-    subMap.set(topic, [cb])
-  }
+export const sub = (cb: Function) => {
+  subscribe = cb
 }
 
 export const pub = (topic: string, message: string) => {

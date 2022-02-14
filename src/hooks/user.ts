@@ -15,5 +15,7 @@ export const getUserInfo = () => {
     : JSON.parse(useLocalStorage('userInfo', '').value)
 }
 export const isMe = (id: string) => {
+  console.log(id)
+
   return id === userState.userInfo._id
 }

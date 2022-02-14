@@ -8,15 +8,13 @@ const localSession = useLocalStorage('session', '')
 export const chatStore = defineStore('chatStore', {
   // state: 返回对象的函数
   state: () => ({
+    // 当前会话
     session: JSON.parse(localSession.value || '{}'),
-    sessionList: <any>[],
+    // 聊天列表
+    list: <any>[],
+    // 当前聊天消息数据
     messages: <any>[]
   }),
-  getters: {
-    sessionArr: (state) => {
-      return state.sessionList.sort((a: any, b: any) => b.newTime - a.newTime)
-    }
-  },
   actions: {
     setSession(chat: Chat) {
       this.session = chat
@@ -26,13 +24,35 @@ export const chatStore = defineStore('chatStore', {
       this.messages = messages
     },
     pushMessage(message: Messages) {
-      this.messages.push(message)
+      this.list.map((item: Chat) => {
+        if (item._id === message.sessionId) {
+          item.messages.splice(0, 0, message)
+          if (item.messages && item.messages[0]) {
+            item.newMsg = item.messages[0].content
+            item.newTime = Number(item.messages[0].time)
+          }
+        }
+        return item
+      })
+      if (this.session._id === message.sessionId) {
+        this.messages.push(message)
+      }
     },
-    setSessionList(sessionList: Chat[]) {
-      this.sessionList = sessionList
+    setSessionList(list: Chat[]) {
+      this.list = list
     },
-    pushSessionList(session: Chat) {
-      this.sessionList.push(session)
+    pushList(session: Chat) {
+      this.list.push(session)
+    },
+    subscribe(message: any) {
+      const { type, data } = message
+      if (type === 'message') {
+        this.pushMessage(data)
+      }
+
+      if (type === 'session') {
+        this.pushList(data)
+      }
     }
   }
 })
